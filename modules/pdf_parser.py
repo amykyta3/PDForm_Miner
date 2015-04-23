@@ -215,18 +215,3 @@ def get_pdf_pages(filename):
     fp.close()
     
     return(pages)
-
-#===================================================================================================
-def get_pdf_fields(filename):
-    """ Legacy wrapper function to get a flattened dict of field k/v pairs """
-    pages = get_pdf_pages(filename)
-    
-    # Blank dict.
-    F = {}
-    
-    # decompose page tree into a flat dict of all fields
-    for pg in pages:
-        for field in pg.fields:
-            F[field.name] = field.value
-    
-    return(F)

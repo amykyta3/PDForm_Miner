@@ -216,11 +216,13 @@ class TemplateBrowser(tkext.Dialog):
         if(not filename):
             return
         
-        T = report_template.create_from_pdf(filename)
-        if(not T):
+        
+        try:
+            T = report_template.ReportTemplate(filename = filename)
+        except ValueError as exc:
             messagebox.showerror(
                 title = "New Report Template",
-                message = "Selected PDF is not a valid form."
+                message = "Selected file is not a valid PDF."
             )
             return
         

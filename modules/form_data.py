@@ -27,6 +27,7 @@ import os
 import datetime
 
 import modules.pdf_parser as pdf_parser
+from pdfminer.pdftypes import PDFException
 
 class FormData:
     def __init__(self, filename):
@@ -44,14 +45,17 @@ class FormData:
         self.timestamp = datetime.datetime.fromtimestamp(os.path.getctime(filename))
         
         # Parse!
-        self.pages = pdf_parser.get_pdf_pages(filename)
+        try:
+            self.pages = pdf_parser.get_pdf_pages(filename)
+        except PDFException as E:
+            self.valid = False
+            return
         
         # Flatten to fields for easy access
         self.fields = {}
         for pg in self.pages:
             for field in pg.fields:
                 self.fields[field.name] = field.value
-        self.fields = pdf_parser.get_pdf_fields(filename)
         
         self.valid = True
     

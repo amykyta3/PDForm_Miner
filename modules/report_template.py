@@ -50,8 +50,22 @@ class ReportTemplate:
         
     
     def _init_from_pdf(self, filename):
-        # TODO: move factory function here.
-        pass
+        P = form_data.FormData(filename)
+        if(P.valid):
+            self.name = ""
+            self.description = ""
+            
+            
+            names = []
+            for k,v in P.fields.items():
+                names.append(k)
+            names.sort()
+            
+            self.avail_fields = names
+            
+            self.form_fingerprint = P.get_fingerprint()
+        else:
+            raise ValueError()
         
     def _init_from_dict(self, dict):
         self.name = dict["name"]
@@ -105,27 +119,6 @@ class ReportTemplate:
             e.parent_template = self
         
         return(C)
-        
-def create_from_pdf(filename):
-    """ Create a new template based off of a PDF Form """
-    
-    P = form_data.FormData(filename)
-    if(P.valid):
-        T = ReportTemplate()
-        
-        names = []
-        for k,v in P.fields.items():
-            names.append(k)
-        
-        names.sort()
-        
-        T.avail_fields = names
-        
-        T.form_fingerprint = P.get_fingerprint()
-        
-        return(T)
-    else:
-        return(None)
     
 #===================================================================================================
 class DataTable():
