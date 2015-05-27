@@ -64,10 +64,23 @@ class ReportTemplate:
             self.avail_fields = names
             
             self.form_fingerprint = P.get_fingerprint()
+            
+            # TODO:
+            # - Create a unique template dir in the settings folder
+            # - Copy the source PDF into that folder (src.pdf)
+            # - call self.save()
         else:
             raise ValueError()
         
     def _init_from_dict(self, dict):
+        # TODO:
+        # Change to _init_from_settings_dir()
+        # Point to template settings folder
+        #
+        # Another TODO:
+        # _init_from_zip()? for importing?
+        # 
+    
         self.name = dict["name"]
         self.description = dict["description"]
         self.form_fingerprint = dict["form_fingerprint"]
@@ -80,6 +93,7 @@ class ReportTemplate:
             self.entries.append(E)
         
     #--------------------------------------------------------------------------
+    
     def get_dict(self):
         """ Convert this to a dictionary data type """
         dict = {}
@@ -120,6 +134,12 @@ class ReportTemplate:
         
         return(C)
     
+
+
+
+#===================================================================================================
+# Completely unrelated functions
+# this needs to move somewhere else
 #===================================================================================================
 class DataTable():
     def __init__(self):
