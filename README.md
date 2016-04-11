@@ -12,7 +12,7 @@ Extraction tool for fillable PDF Forms
 
 ## Installation instructions (Linux)
 1. Install Python3 and pip3
-    * `sudo apt-get install python3 python3-pip`
+    * `sudo apt-get install python3 python3-pip python3-tk`
 2. Run the install_packages.sh script as administrator (sudo)
     * Make sure you are connected to the internet
     * This script downloads and installs any extra stuff that the program needs
