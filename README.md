@@ -2,7 +2,7 @@
 Extraction tool for fillable PDF Forms
 
 ====================================================================================================
- First time install instructions
+ Installation instructions (Windows)
 ====================================================================================================
 1. Download Python 3.4: www.python.org/downloads
 2. Install Python
@@ -12,12 +12,14 @@ Extraction tool for fillable PDF Forms
 3. Run the install_packages.bat script
     Make sure you are connected to the internet
     This script downloads and installs any extra stuff that the program needs
-4. Anketa_Loader.pyw should be able to run now.
+4. PDForm_Miner.pyw should be able to run now.
 
 ====================================================================================================
- Update Instructions
+ Installation instructions (Linux)
 ====================================================================================================
-Update by simply copying over all the files in the program's folder
-This includes:
-- Anketa_Loader.pyw
-- Anything in the "modules" folder
+1. Install Python3 and pip3
+    sudo apt-get install python3 python3-pip
+2. Run the install_packages.sh script as administrator (sudo)
+    Make sure you are connected to the internet
+    This script downloads and installs any extra stuff that the program needs
+3. PDForm_Miner.pyw should be able to run now.

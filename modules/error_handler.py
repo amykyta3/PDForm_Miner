@@ -47,7 +47,8 @@ def error_handler(*exc_info):
         messagebox.showerror(
             title = "Internal Error",
             message = "Oops! Something went wrong!\n\n"
-                    + "Please send the 'error.log' file to amykyta3@gmail.com and I'll try to fix this problem"
+                    + "Please submit an issue report at https://github.com/amykyta3/PDForm_Miner/issues\n"
+                    + "Be sure to include the 'run.log' file and I'll try to fix this problem"
         )
     
 # Install exception handler

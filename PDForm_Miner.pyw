@@ -75,7 +75,7 @@ class AppSettings:
 def main(argv):
     
     logging.basicConfig(
-        filename="error.log",
+        filename="run.log",
         format="%(asctime)s %(levelname)s:%(message)s",
         level=logging.WARNING
     )

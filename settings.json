@@ -1,0 +1,70 @@
+{
+  "Templates": [
+    {
+      "name": "Example Report",
+      "avail_fields": [
+        "address1",
+        "address2",
+        "city",
+        "country",
+        "drivers_licens",
+        "fav_colour",
+        "gender",
+        "height",
+        "lang_deutch",
+        "lang_english",
+        "lang_esperanto",
+        "lang_french",
+        "lang_latin",
+        "name_first",
+        "name_last",
+        "postcode"
+      ],
+      "description": "Export forms in the example folder",
+      "entries": [
+        {
+          "name": "File Name",
+          "type_name": "Filename"
+        },
+        {
+          "name": "First Name",
+          "type_name": "PDF Field",
+          "field_name": "name_first"
+        },
+        {
+          "name": "Last Name",
+          "type_name": "PDF Field",
+          "field_name": "name_last"
+        },
+        {
+          "name": "Address1",
+          "type_name": "PDF Field",
+          "field_name": "address1"
+        },
+        {
+          "name": "Address2",
+          "type_name": "PDF Field",
+          "field_name": "address2"
+        },
+        {
+          "name": "City",
+          "type_name": "PDF Field",
+          "field_name": "city"
+        },
+        {
+          "name": "Country",
+          "type_name": "PDF Field",
+          "field_name": "country"
+        },
+        {
+          "name": "Favorite Color",
+          "type_name": "PDF Field",
+          "field_name": "fav_colour"
+        }
+      ],
+      "form_fingerprint": [
+        1894207616
+      ]
+    }
+  ]
+}
