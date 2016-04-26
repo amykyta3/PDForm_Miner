@@ -29,11 +29,22 @@ import pyexcel
 import pyexcel.ext.xls
 import pyexcel.ext.xlsx
 
-import modules.form_data as form_data
-import modules.report_entries as report_entries
+from . import form_data
+from . import report_entries
 
-class ReportTemplate:
-    def __init__(self, filename = None, dict = None):
+from .python_modules.class_codec import EncodableClass
+
+class ReportTemplate(EncodableClass):
+    
+    encode_schema = {
+        "name": str,
+        "description": str,
+        "form_fingerprint": [int],
+        "avail_fields": [str],
+        "entries": [report_entries._entry]
+    }
+    
+    def __init__(self, filename = None):
         self.name = ""
         self.description = ""
         self.form_fingerprint = [] # Array of page hashes, in order of appearance.
@@ -45,9 +56,6 @@ class ReportTemplate:
         
         if(filename != None):
             self._init_from_pdf(filename)
-        elif(dict != None):
-            self._init_from_dict(dict)
-        
     
     def _init_from_pdf(self, filename):
         P = form_data.FormData(filename)
@@ -72,42 +80,7 @@ class ReportTemplate:
         else:
             raise ValueError()
         
-    def _init_from_dict(self, dict):
-        # TODO:
-        # Change to _init_from_settings_dir()
-        # Point to template settings folder
-        #
-        # Another TODO:
-        # _init_from_zip()? for importing?
-        # 
-    
-        self.name = dict["name"]
-        self.description = dict["description"]
-        self.form_fingerprint = dict["form_fingerprint"]
-        
-        self.avail_fields = dict["avail_fields"]
-        
-        self.entries = []
-        for ED in dict["entries"]:
-            E = report_entries.create_from_dict(self,ED)
-            self.entries.append(E)
-        
     #--------------------------------------------------------------------------
-    
-    def get_dict(self):
-        """ Convert this to a dictionary data type """
-        dict = {}
-        dict['name'] = self.name
-        dict['description'] = self.description
-        dict['form_fingerprint'] = self.form_fingerprint
-        dict['avail_fields'] = self.avail_fields
-        
-        dict['entries'] = []
-        for e in self.entries:
-            ed = e.get_dict()
-            dict['entries'].append(ed)
-        
-        return(dict)
         
     def is_matching_form(self, form_data):
         """ Checks if the given form_data's fingerprint is compatible with the template's fingerprint """

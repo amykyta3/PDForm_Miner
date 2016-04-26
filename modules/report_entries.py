@@ -30,29 +30,23 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 
+from .python_modules.class_codec import EncodableClass
+
 #===================================================================================================
 # Base Classes
 #===================================================================================================
 # Generic class that defines a report entry
-class _entry:
+class _entry(EncodableClass):
     type_name = "INVALID"
+    
+    encode_schema = {
+        "parent_template": EncodableClass, # cant point to actual parent type. This is good enough
+        "name": str
+    }
     
     def __init__(self, parent_template, name):
         self.parent_template = parent_template
         self.name = name
-    
-    # Extend this
-    def get_dict(self):
-        """ Convert this to a dictionary data type """
-        D = {}
-        D['type_name'] = self.type_name
-        D['name'] = self.name
-        return(D)
-        
-    # Extend this
-    def set_dict(self, D):
-        """ Initialize remainder of the class from a dictionary """
-        self.name = D['name']
     
     # override this
     def get_value(self, pdf_object):
@@ -145,23 +139,15 @@ def get_type_idx(type):
     
     return(None)
     
-def create_from_dict(T,D):
-    """ Creates a _entry class based on a dictionary object"""
-    
-    # Search through each _entry subtype and find the one with a matching type_name
-    for class_t in _entry.__subclasses__():
-        if(class_t.type_name == D["type_name"]):
-            E = class_t(T, D["name"])
-            E.set_dict(D)
-            return(E)
-    
-    return(None)
-    
 #===================================================================================================
 # Report entry from a PDF field
 #===================================================================================================
 class PDF_Field(_entry):
     type_name = "PDF Field"
+    
+    encode_schema = {
+        "field_name": str
+    }
     
     def __init__(self, parent_template, name):
         _entry.__init__(self, parent_template, name)
@@ -170,17 +156,6 @@ class PDF_Field(_entry):
         # Default to use the first field in list
         if(len(self.parent_template.avail_fields) != 0):
             self.field_name = self.parent_template.avail_fields[0]
-            
-    def get_dict(self):
-        """ Convert this to a dictionary data type """
-        D = _entry.get_dict(self)
-        D['field_name'] = self.field_name
-        return(D)
-        
-    def set_dict(self, D):
-        """ Initialize remainder of the class from a dictionary """
-        _entry.set_dict(self,D)
-        self.field_name = D['field_name']
         
     def get_value(self, pdf_object):
         if(self.field_name in pdf_object.fields):
@@ -236,17 +211,10 @@ class PDF_Field_settings_gui(_settings_gui):
 class Export_Timestamp(_entry):
     type_name = "Time Exported"
     
+    encode_schema = {}
+    
     def __init__(self, parent_template, name):
         _entry.__init__(self, parent_template, name)
-        
-    def get_dict(self):
-        """ Convert this to a dictionary data type """
-        D = _entry.get_dict(self)
-        return(D)
-        
-    def set_dict(self, D):
-        """ Initialize remainder of the class from a dictionary """
-        _entry.set_dict(self,D)
         
     def get_value(self, pdf_object):
         now = datetime.datetime.now()
@@ -280,17 +248,10 @@ class Export_Timestamp_settings_gui(_settings_gui):
 class PDF_Timestamp(_entry):
     type_name = "Time PDF Created"
     
+    encode_schema = {}
+    
     def __init__(self, parent_template, name):
         _entry.__init__(self, parent_template, name)
-        
-    def get_dict(self):
-        """ Convert this to a dictionary data type """
-        D = _entry.get_dict(self)
-        return(D)
-        
-    def set_dict(self, D):
-        """ Initialize remainder of the class from a dictionary """
-        _entry.set_dict(self,D)
         
     def get_value(self, pdf_object):
         str = pdf_object.timestamp.strftime("%Y-%m-%d %H:%M:%S")
@@ -323,17 +284,10 @@ class PDF_Timestamp_settings_gui(_settings_gui):
 class PDF_Filename(_entry):
     type_name = "Filename"
     
+    encode_schema = {}
+    
     def __init__(self, parent_template, name):
         _entry.__init__(self, parent_template, name)
-    
-    def get_dict(self):
-        """ Convert this to a dictionary data type """
-        D = _entry.get_dict(self)
-        return(D)
-        
-    def set_dict(self, D):
-        """ Initialize remainder of the class from a dictionary """
-        _entry.set_dict(self,D)
         
     def get_value(self, pdf_object):
         return(pdf_object.filename)

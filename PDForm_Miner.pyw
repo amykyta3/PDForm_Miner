@@ -25,6 +25,10 @@
 # SOFTWARE.
 ####################################################################################################
 
+
+import modules.python_modules.tk_extensions as tkext
+#tkext.ExceptionHandler.install()
+
 import modules.error_handler
 
 import sys
@@ -35,10 +39,16 @@ import atexit
 
 import modules.gui as gui
 import modules.report_template as report_template
+from modules.python_modules.class_codec import EncodableClass
 
 ####################################################################################################
-class AppSettings:
+class AppSettings(EncodableClass):
     FILENAME = "settings.json"
+    
+    encode_schema = {
+        "Templates": [report_template.ReportTemplate]
+    }
+    
     def __init__(self):
         # Default Settings
         self.Templates = []
@@ -68,7 +78,7 @@ class AppSettings:
             
         # Write out
         f = open(self.FILENAME, "w")
-        json.dump(dict, f, indent=2)
+        json.dump(dict, f, indent=2, sort_keys = True)
         f.close()
 
 ####################################################################################################
@@ -85,10 +95,14 @@ def main(argv):
     console.setLevel(logging.INFO)
     logging.getLogger().addHandler(console)
     
-    
-    S = AppSettings()
-    S.load()
-    atexit.register(S.save)
+    SETTINGS_FILE = "settings.json"
+    if(os.path.exists(SETTINGS_FILE)):
+        # Load settings file
+        with open(SETTINGS_FILE, 'r') as f:
+            S = AppSettings.from_dict(json.load(f))
+    else:
+        # Create default settings
+        S = AppSettings()
     
     # Don't know which template to start with. Ask for one first
     dlg = gui.TemplateBrowser(None, S)
@@ -97,7 +111,10 @@ def main(argv):
         logging.info("Opening Template: %s" % dlg.selected_template.name)
         app = gui.FormImporter(None, dlg.selected_template, S)
         app.mainloop()
-    
+        
+    # Write out settings
+    with open(SETTINGS_FILE, 'w') as f:
+        json.dump(S.to_dict(), f, indent=2, sort_keys = True)
 
 ####################################################################################################
 if __name__ == '__main__':

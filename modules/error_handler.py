@@ -24,45 +24,6 @@
 ####################################################################################################
 
 import logging
-import traceback
-from tkinter import messagebox
-
-#===================================================================================================
-import sys
-def error_handler(*exc_info):
-    exc_type = exc_info[0]
-    exc_value = exc_info[1]
-    
-    text = "".join(traceback.format_exception(*exc_info))
-    logging.critical("{0}".format(text))
-    
-    if(exc_type == ImportError):
-        messagebox.showerror(
-            title = "Incomplete Installation",
-            message = "It looks like this program is missing some parts.\n"
-                    + "Please re-run the 'install_packages' script.\n\n"
-                    + "Details: %s" % exc_value
-        )
-    else:
-        messagebox.showerror(
-            title = "Internal Error",
-            message = "Oops! Something went wrong!\n\n"
-                    + "Please submit an issue report at https://github.com/amykyta3/PDForm_Miner/issues\n"
-                    + "Be sure to include the 'run.log' file and I'll try to fix this problem"
-        )
-    
-# Install exception handler
-sys.excepthook = error_handler
-
-#===================================================================================================
-import tkinter as tk
-# By default, tk exceptions occur silently.
-# Forward these to our error handler by overriding the default callback
-def tk_error_handler(self, *args):
-    error_handler(*args)
-tk.Tk.report_callback_exception = tk_error_handler
-
-
 
 #===================================================================================================
 import pdfminer.psparser

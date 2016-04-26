@@ -35,10 +35,10 @@ from tkinter import ttk
 from tkinter import filedialog
 from tkinter import messagebox
 
-import modules.tk_extensions as tkext
-import modules.form_data as form_data
-import modules.report_template as report_template
-import modules.report_entries as report_entries
+from .python_modules import tk_extensions as tkext
+from . import form_data
+from . import report_template
+from . import report_entries
 
 def trim_path(path, maxlen):
     if(len(path) <= maxlen):
@@ -155,8 +155,8 @@ class TemplateBrowser(tkext.Dialog):
         
         
         # window is not allowed to be any smaller than default
-        self.update_idletasks() #Give Tk a chance to update widgets and figure out the window size
-        self.minsize(self.winfo_width(), self.winfo_height())
+        self.tkWindow.update_idletasks() #Give Tk a chance to update widgets and figure out the window size
+        self.tkWindow.minsize(self.tkWindow.winfo_width(), self.tkWindow.winfo_height())
     
     #---------------------------------------------------------------
     # Helpers
@@ -227,7 +227,7 @@ class TemplateBrowser(tkext.Dialog):
             return
         
         # Initialized. Jump into the editor
-        TE = TemplateEditor(self, T, "New Report Template")
+        TE = TemplateEditor(self.tkWindow, T, "New Report Template")
         if(TE.result):
             # Template created. Insert edited template into the list & the GUI
             self.S.Templates.append(TE.T)
@@ -239,7 +239,7 @@ class TemplateBrowser(tkext.Dialog):
         if(len(idx)):
             idx = int(idx[0])
             
-            TE = TemplateEditor(self, self.S.Templates[idx], "Edit Report Template")
+            TE = TemplateEditor(self.tkWindow, self.S.Templates[idx], "Edit Report Template")
             if(TE.result):
                 # edited. replace with edited instance
                 self.S.Templates[idx] = TE.T

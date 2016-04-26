@@ -26,7 +26,7 @@
 import os
 import datetime
 
-import modules.pdf_parser as pdf_parser
+from . import pdf_parser
 from pdfminer.pdftypes import PDFException
 
 class FormData:

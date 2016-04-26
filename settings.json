@@ -1,7 +1,10 @@
 {
+  "<classtype>": "__main__.AppSettings",
+  "<ref_id>": 0,
   "Templates": [
     {
-      "name": "Example Report",
+      "<classtype>": "modules.report_template.ReportTemplate",
+      "<ref_id>": 1,
       "avail_fields": [
         "address1",
         "address2",
@@ -23,48 +26,89 @@
       "description": "Export forms in the example folder",
       "entries": [
         {
+          "<classtype>": "modules.report_entries.PDF_Filename",
+          "<ref_id>": 2,
           "name": "File Name",
-          "type_name": "Filename"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 3,
+          "field_name": "name_first",
           "name": "First Name",
-          "type_name": "PDF Field",
-          "field_name": "name_first"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 4,
+          "field_name": "name_last",
           "name": "Last Name",
-          "type_name": "PDF Field",
-          "field_name": "name_last"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 5,
+          "field_name": "address1",
           "name": "Address1",
-          "type_name": "PDF Field",
-          "field_name": "address1"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 6,
+          "field_name": "address2",
           "name": "Address2",
-          "type_name": "PDF Field",
-          "field_name": "address2"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 7,
+          "field_name": "city",
           "name": "City",
-          "type_name": "PDF Field",
-          "field_name": "city"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 8,
+          "field_name": "country",
           "name": "Country",
-          "type_name": "PDF Field",
-          "field_name": "country"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         },
         {
+          "<classtype>": "modules.report_entries.PDF_Field",
+          "<ref_id>": 9,
+          "field_name": "fav_colour",
           "name": "Favorite Color",
-          "type_name": "PDF Field",
-          "field_name": "fav_colour"
+          "parent_template": {
+            "<classtype>": "<ref>",
+            "<ref_id>": 1
+          }
         }
       ],
       "form_fingerprint": [
         1894207616
-      ]
+      ],
+      "name": "Example Report"
     }
   ]
 }
