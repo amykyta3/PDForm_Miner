@@ -218,7 +218,7 @@ class TemplateBrowser(tkext.Dialog):
         
         
         try:
-            T = report_template.ReportTemplate(filename = filename)
+            T = report_template.ReportTemplate.from_pdf(filename)
         except ValueError as exc:
             messagebox.showerror(
                 title = "New Report Template",

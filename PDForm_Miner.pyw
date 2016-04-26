@@ -35,7 +35,6 @@ import sys
 import json
 import os
 import logging
-import atexit
 
 import modules.gui as gui
 import modules.report_template as report_template
@@ -52,34 +51,6 @@ class AppSettings(EncodableClass):
     def __init__(self):
         # Default Settings
         self.Templates = []
-        
-    def load(self):
-        if(not os.path.exists(self.FILENAME)):
-            return
-        
-        f = open(self.FILENAME,"r")
-        dict = json.load(f)
-        f.close()
-        
-        # Load templates
-        if('Templates' in dict):
-            for td in dict['Templates']:
-                t = report_template.ReportTemplate(dict = td)
-                self.Templates.append(t)
-        
-    def save(self):
-        dict = {}
-        
-        # convert templates
-        dict['Templates'] = []
-        for t in self.Templates:
-            td = t.get_dict()
-            dict['Templates'].append(td)
-            
-        # Write out
-        f = open(self.FILENAME, "w")
-        json.dump(dict, f, indent=2, sort_keys = True)
-        f.close()
 
 ####################################################################################################
 def main(argv):

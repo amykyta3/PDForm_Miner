@@ -44,25 +44,21 @@ class ReportTemplate(EncodableClass):
         "entries": [report_entries._entry]
     }
     
-    def __init__(self, filename = None):
+    def __init__(self):
         self.name = ""
         self.description = ""
         self.form_fingerprint = [] # Array of page hashes, in order of appearance.
-        
         self.avail_fields = []
-        
-        # array of report_entry._entry classes
-        self.entries = []
-        
-        if(filename != None):
-            self._init_from_pdf(filename)
+        self.entries = [] # array of report_entry._entry classes
     
-    def _init_from_pdf(self, filename):
+    @classmethod
+    def from_pdf(cls, filename):
+        self = cls.__new__(cls)
         P = form_data.FormData(filename)
         if(P.valid):
             self.name = ""
             self.description = ""
-            
+            self.entries = []
             
             names = []
             for k,v in P.fields.items():
@@ -73,12 +69,10 @@ class ReportTemplate(EncodableClass):
             
             self.form_fingerprint = P.get_fingerprint()
             
-            # TODO:
-            # - Create a unique template dir in the settings folder
-            # - Copy the source PDF into that folder (src.pdf)
-            # - call self.save()
         else:
             raise ValueError()
+        
+        return(self)
         
     #--------------------------------------------------------------------------
         
