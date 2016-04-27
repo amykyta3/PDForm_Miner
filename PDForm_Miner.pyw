@@ -38,19 +38,6 @@ import logging
 
 import modules.gui as gui
 import modules.report_template as report_template
-from modules.python_modules.class_codec import EncodableClass
-
-####################################################################################################
-class AppSettings(EncodableClass):
-    FILENAME = "settings.json"
-    
-    encode_schema = {
-        "Templates": [report_template.ReportTemplate]
-    }
-    
-    def __init__(self):
-        # Default Settings
-        self.Templates = []
 
 ####################################################################################################
 def main(argv):
@@ -66,27 +53,42 @@ def main(argv):
     console.setLevel(logging.INFO)
     logging.getLogger().addHandler(console)
     
-    SETTINGS_FILE = "settings.json"
-    if(os.path.exists(SETTINGS_FILE)):
-        # Load settings file
-        with open(SETTINGS_FILE, 'r') as f:
-            S = AppSettings.from_dict(json.load(f))
-    else:
-        # Create default settings
-        S = AppSettings()
+    Templates = load_templates()
     
     # Don't know which template to start with. Ask for one first
-    dlg = gui.TemplateBrowser(None, S)
+    dlg = gui.TemplateBrowser(None, Templates)
     
     if(dlg.result):
         logging.info("Opening Template: %s" % dlg.selected_template.name)
-        app = gui.FormImporter(None, dlg.selected_template, S)
+        app = gui.FormImporter(None, dlg.selected_template)
         app.mainloop()
         
-    # Write out settings
-    with open(SETTINGS_FILE, 'w') as f:
-        json.dump(S.to_dict(), f, indent=2, sort_keys = True)
+    save_templates(Templates)
 
+#---------------------------------------------------------------------------------------------------
+TEMPLATE_DIR = "templates"
+
+def save_templates(templates):
+    # create template dir if necessary
+    os.makedirs(TEMPLATE_DIR, exist_ok=True)
+    
+    for T in templates:
+        path = os.path.join(TEMPLATE_DIR, "%s.json" % (T.name))
+        with open(os.path.join(path), 'w') as f:
+            json.dump(T.to_dict(), f, indent=2, sort_keys = True)
+            
+def load_templates():
+    templates = []
+    
+    if(os.path.exists(TEMPLATE_DIR)):
+        for p in os.listdir(TEMPLATE_DIR):
+            if(p.endswith(".json")):
+                with open(os.path.join(TEMPLATE_DIR, p), 'r') as f:
+                    templates.append(report_template.ReportTemplate.from_dict(json.load(f)))
+    
+    return(templates)
+    
+    
 ####################################################################################################
 if __name__ == '__main__':
     sys.exit(main(sys.argv))

@@ -168,30 +168,30 @@ class TemplateBrowser(tkext.Dialog):
         self.txt_desc.configure(state=tk.DISABLED)
     
     def set_ev_selection(self, idx):
-        if(len(self.S.Templates) == 0):
+        if(len(self.templates) == 0):
             # No templates left!
             self.set_desc_text("")
             return
-        elif(idx >= len(self.S.Templates)):
-            idx = len(self.S.Templates) - 1
+        elif(idx >= len(self.templates)):
+            idx = len(self.templates) - 1
         
         self.rt_list.selection_clear(0,tk.END)
         self.rt_list.selection_set(idx)
         self.rt_list.see(idx)
-        self.set_desc_text(self.S.Templates[idx].description)
+        self.set_desc_text(self.templates[idx].description)
     
     #---------------------------------------------------------------
     # Events
     #---------------------------------------------------------------
-    def __init__(self, parent, Settings):
-        self.S = Settings
+    def __init__(self, parent, templates):
+        self.templates = templates
         self.selected_template = None # dialog result
         
         title = "Select Report Template"
         tkext.Dialog.__init__(self, parent, title)
         
     def dlg_initialize(self):
-        for T in self.S.Templates:
+        for T in self.templates:
             self.rt_list.insert(tk.END, T.name)
         
         # preselect something
@@ -201,7 +201,7 @@ class TemplateBrowser(tkext.Dialog):
         idx = self.rt_list.curselection()
         if(len(idx)):
             idx = int(idx[0])
-            self.set_desc_text(self.S.Templates[idx].description)
+            self.set_desc_text(self.templates[idx].description)
         
     def ev_rt_list_DoubleClick(self, ev):
         self.dlg_pbOK()
@@ -230,21 +230,21 @@ class TemplateBrowser(tkext.Dialog):
         TE = TemplateEditor(self.tkWindow, T, "New Report Template")
         if(TE.result):
             # Template created. Insert edited template into the list & the GUI
-            self.S.Templates.append(TE.T)
+            self.templates.append(TE.T)
             self.rt_list.insert(tk.END, TE.T.name)
-            self.set_ev_selection(len(self.S.Templates)-1)
+            self.set_ev_selection(len(self.templates)-1)
     
     def ev_but_Edit(self):
         idx = self.rt_list.curselection()
         if(len(idx)):
             idx = int(idx[0])
             
-            TE = TemplateEditor(self.tkWindow, self.S.Templates[idx], "Edit Report Template")
+            TE = TemplateEditor(self.tkWindow, self.templates[idx], "Edit Report Template")
             if(TE.result):
                 # edited. replace with edited instance
-                self.S.Templates[idx] = TE.T
+                self.templates[idx] = TE.T
                 self.rt_list.delete(idx)
-                self.rt_list.insert(idx, self.S.Templates[idx].name)
+                self.rt_list.insert(idx, self.templates[idx].name)
                 self.set_ev_selection(idx)
                 
     
@@ -253,7 +253,7 @@ class TemplateBrowser(tkext.Dialog):
         if(len(idx)):
             idx = int(idx[0])
             
-            C = copy.deepcopy(self.S.Templates[idx])
+            C = copy.deepcopy(self.templates[idx])
             
             # remove any trailing " (copy ##)"
             C.name = re.sub("\s\(copy(?: \d+)?\)$", "", C.name)
@@ -262,7 +262,7 @@ class TemplateBrowser(tkext.Dialog):
             newname = C.name + " (copy)"
             n = 0
             while(True):
-                for t in self.S.Templates:
+                for t in self.templates:
                     if(t.name == newname):
                         n = n + 1
                         newname = C.name + " (copy %d)" % n
@@ -271,7 +271,7 @@ class TemplateBrowser(tkext.Dialog):
                     break
             C.name = newname
             
-            self.S.Templates.insert(idx+1, C)
+            self.templates.insert(idx+1, C)
             self.rt_list.insert(idx+1, C.name)
             self.set_ev_selection(idx+1)
             
@@ -284,11 +284,11 @@ class TemplateBrowser(tkext.Dialog):
             res = messagebox.askyesno(
                 title = "Delete Report Template",
                 icon = messagebox.WARNING,
-                message = "Are you sure you want to delete '%s'?" % self.S.Templates[idx].name
+                message = "Are you sure you want to delete '%s'?" % self.templates[idx].name
             )
             
             if(res):
-                del self.S.Templates[idx]
+                del self.templates[idx]
                 self.rt_list.delete(idx)
                 self.set_ev_selection(idx)
             
@@ -307,7 +307,7 @@ class TemplateBrowser(tkext.Dialog):
         idx = self.rt_list.curselection()
         idx = int(idx[0])
         
-        self.selected_template = self.S.Templates[idx]
+        self.selected_template = self.templates[idx]
     
 #===================================================================================================
 class TemplateEditor(tkext.Dialog):
@@ -865,9 +865,8 @@ class FormImporter(tk.Tk):
     #---------------------------------------------------------------
     # Events
     #---------------------------------------------------------------
-    def __init__(self, parent, Template, Settings):
+    def __init__(self, parent, Template):
         self.T = Template
-        self.S = Settings
         self.Forms = []
         
         tk.Tk.__init__(self, parent)
