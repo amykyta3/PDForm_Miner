@@ -30,7 +30,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 
-from .python_modules.class_codec import EncodableClass
+from .python_modules.encodable_class import EncodableClass
 
 #===================================================================================================
 # Base Classes

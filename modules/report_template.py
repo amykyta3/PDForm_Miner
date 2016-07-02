@@ -26,13 +26,11 @@
 import copy
 
 import pyexcel
-import pyexcel.ext.xls
-import pyexcel.ext.xlsx
 
 from . import form_data
 from . import report_entries
 
-from .python_modules.class_codec import EncodableClass
+from .python_modules.encodable_class import EncodableClass
 
 class ReportTemplate(EncodableClass):
     
