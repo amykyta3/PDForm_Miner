@@ -35,6 +35,8 @@ from pdfminer.pdfdevice import PDFDevice
 from pdfminer.pdftypes import PDFObjRef
 from pdfminer.psparser import PSLiteral
 
+log = logging.getLogger("pdf_parser")
+
 #===================================================================================================
 Ff_RADIO = 0x00010000
 Ff_PUSHBUTTON = 0x00020000

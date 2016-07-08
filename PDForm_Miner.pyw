@@ -27,7 +27,7 @@
 
 
 import modules.python_modules.tk_extensions as tkext
-tkext.ExceptionHandler.install()
+#tkext.ExceptionHandler.install()
 
 #import modules.error_handler
 
@@ -38,32 +38,29 @@ import logging
 
 import modules.gui as gui
 import modules.report_template as report_template
+from modules.python_modules.app import App
 
 ####################################################################################################
-def main(argv):
+class PDForm_Miner(App):
     
-    logging.basicConfig(
-        filename="run.log",
-        format="%(asctime)s %(levelname)s:%(message)s",
-        level=logging.WARNING
-    )
-    
-    # dump all log messages to console
-    console = logging.StreamHandler()
-    console.setLevel(logging.INFO)
-    logging.getLogger().addHandler(console)
-    
-    Templates = load_templates()
-    
-    # Don't know which template to start with. Ask for one first
-    dlg = gui.TemplateBrowser(None, Templates)
-    
-    if(dlg.result):
-        logging.info("Opening Template: %s" % dlg.selected_template.name)
-        app = gui.FormImporter(None, dlg.selected_template)
-        app.mainloop()
+    def main(self):
+        App.main(self)
         
-    save_templates(Templates)
+        # Always set pdfminer messages to be quieter
+        l = logging.getLogger("pdfminer")
+        l.setLevel(logging.WARNING)
+        
+        Templates = load_templates()
+        
+        # Don't know which template to start with. Ask for one first
+        dlg = gui.TemplateBrowser(None, Templates)
+        
+        if(dlg.result):
+            self.log.info("Opening Template: %s" % dlg.selected_template.name)
+            app = gui.FormImporter(None, dlg.selected_template)
+            app.mainloop()
+            
+        save_templates(Templates)
 
 #---------------------------------------------------------------------------------------------------
 TEMPLATE_DIR = "templates"
@@ -91,4 +88,5 @@ def load_templates():
     
 ####################################################################################################
 if __name__ == '__main__':
-    sys.exit(main(sys.argv))
+    A = PDForm_Miner()
+    A.main()

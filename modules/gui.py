@@ -40,6 +40,8 @@ from . import form_data
 from . import report_template
 from . import report_entries
 
+log = logging.getLogger("gui")
+
 def trim_path(path, maxlen):
     if(len(path) <= maxlen):
         return(path)
@@ -836,7 +838,7 @@ class FormImporter(tk.Tk):
             if(f.filename == filename):
                 return
         
-        logging.info("Loading: %s" % filename)
+        log.info("Loading: %s" % filename)
         F = form_data.FormData(filename)
         
         self.Forms.append(F)
@@ -845,7 +847,7 @@ class FormImporter(tk.Tk):
         # Validate the form
         if(F.valid):
             if(self.T.is_matching_form(F) == False):
-                logging.info("Form fingerprint mismatch. Not valid: %s" % F.filename)
+                log.warning("Form fingerprint mismatch. Not valid: %s" % F.filename)
                 F.valid = False
         
         if(not F.valid):

@@ -25,9 +25,12 @@
 
 import os
 import datetime
+import logging
 
 from . import pdf_parser
 from pdfminer.pdftypes import PDFException
+
+log = logging.getLogger("form_data")
 
 class FormData:
     def __init__(self, filename):
@@ -49,6 +52,7 @@ class FormData:
             self.pages = pdf_parser.get_pdf_pages(filename)
         except PDFException as E:
             self.valid = False
+            log.warning("Call to get_pdf_pages() failed for '%s'" % filename)
             return
         
         # Flatten to fields for easy access
