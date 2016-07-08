@@ -27,15 +27,30 @@ import sys
 import re
 import logging
 
-from pdfminer.psparser import PSLiteral
-from pdfminer.pdfparser import PDFDocument, PDFParser
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfinterp import PDFResourceManager
+from pdfminer.pdfdevice import PDFDevice
 from pdfminer.pdftypes import PDFObjRef
+from pdfminer.psparser import PSLiteral
 
 #===================================================================================================
 Ff_RADIO = 0x00010000
 Ff_PUSHBUTTON = 0x00020000
 #===================================================================================================
+def decode_pdf_string(bytestring):
+    """
+    PDF Strings can sometimes be UTF-16. Detect and convert if necessary
+    """
+    if(bytestring.startswith(b'\xfe\xff') or bytestring.startswith(b'\xff\xfe')):
+        string = bytestring.decode("utf-16")
+    else:
+        string = bytestring.decode("ascii")
+    
+    return(string)
 
+#===================================================================================================
 class Field:
     def __init__(self, obj):
         self.valid = False
@@ -45,25 +60,18 @@ class Field:
         if(isinstance(obj['Subtype'], PSLiteral) == False): return
         if(obj['Subtype'].name != "Widget"): return
         if('T' not in obj): return
-        if(not isinstance(obj['T'], str)): return
+        if(not isinstance(obj['T'], bytes)): return
         if('FT' not in obj): return
         if(not isinstance(obj['FT'], PSLiteral)): return
         
         # Get the field name
-        self.name = obj['T']
-        # check if it is a UTF-16 string.
-        if(type(self.name) == bytes):
-            self.name = self.name.decode("utf-16")
+        self.name = decode_pdf_string(obj['T'])
         
         # Determine the type of field, and get the value
         if(obj['FT'].name == "Tx"):
             # Text Field
             if('V' in obj):
-                self.value = obj['V']
-                
-                # check if it is a UTF-16 string.
-                if(type(self.value) == bytes):
-                    self.value = self.value.decode("utf-16")
+                self.value = decode_pdf_string(obj['V'])
             else:
                 self.value = ""
         elif(obj['FT'].name == "Btn"):
@@ -98,11 +106,7 @@ class Field:
         elif(obj['FT'].name == "Ch"):
             # Choice Field
             if('V' in obj):
-                self.value = obj['V']
-                
-                # check if it is a UTF-16 string.
-                if(type(self.value) == bytes):
-                    self.value = self.value.decode("utf-16")
+                self.value = decode_pdf_string(obj['V'])
             else:
                 self.value = ""
         else:
@@ -197,21 +201,20 @@ def get_pdf_pages(filename):
     
     # Load PDF
     fp = open(filename, 'rb')
+    
+    # Initialize pdfminer
     parser = PDFParser(fp)
+    doc = PDFDocument(parser)
+    rsrcmgr = PDFResourceManager()
+    device = PDFDevice(rsrcmgr)
     
-    # Connect parser to document
-    doc = PDFDocument()
-    parser.set_document(doc)
-    doc.set_parser(parser)
     
-    doc.initialize()
-
     # Gather all the pages
     pages = []
-    for pg in doc.get_pages():
+    for pg in PDFPage.create_pages(doc):
         P = Page(pg)
         pages.append(P)
-    
+        
     fp.close()
     
     return(pages)

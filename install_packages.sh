@@ -6,7 +6,7 @@ if [ "$(id -u)" != "0" ] ; then
 	exit 1
 fi
 
-pip3 install pdfminer3k
+pip3 install pdfminer.six
 pip3 install pyexcel
 pip3 install pyexcel-ods3
 pip3 install pyexcel-xlsx

@@ -27,9 +27,9 @@
 
 
 import modules.python_modules.tk_extensions as tkext
-#tkext.ExceptionHandler.install()
+tkext.ExceptionHandler.install()
 
-import modules.error_handler
+#import modules.error_handler
 
 import sys
 import json
