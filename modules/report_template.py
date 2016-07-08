@@ -24,6 +24,7 @@
 ####################################################################################################
 
 import copy
+import ast
 
 import pyexcel
 
@@ -128,10 +129,19 @@ class DataTable():
         row_dict is a dict of row data by column name """
         
         for k,v in row_dict.items():
+            
             if(k not in self.table):
                 # Heading does not exist yet. Fill in blanks for past items
                 self.table[k] = [""] * self.rowcount
                 
+            # clean up value
+            v = v.strip()
+            # try converting string to a number
+            try:
+                v = ast.literal_eval(v)
+            except:
+                pass
+            
             self.table[k].append(v)
             
         self.rowcount = self.rowcount + 1
