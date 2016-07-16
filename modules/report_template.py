@@ -109,14 +109,13 @@ class ReportTemplate(EncodableClass):
 #===================================================================================================
 class DataTable():
     def __init__(self):
-        self.name = "table"
+        self.name = "output"
         self.headings = [] # array of column headings (to define column order)
         self.table = {} # dictionary of column arrays
         self.rowcount = 0
         
     def init_blank(self, T):
         """Initialize the table using a template"""
-        self.name = T.name
         self.headings = []
         self.table = {}
         self.rowcount = 0
